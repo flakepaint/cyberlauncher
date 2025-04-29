@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Launcher</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #status {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #timer {
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Website Launcher</h1>
+        <div class="loader"></div>
+        <div id="status">Opening websites...</div>
+        <div id="timer"></div>
+    </div>
+
+
+    <script>
+        let launcherWindow = window;
+
+
+        function openWebsites() {
+            const sites = [
+                'https://my.pltw.org',
+                'https://classroom.google.com/c/NzA1MTE5ODU0NTYw'
+            ];
+            
+            sites.forEach((site, index) => {
+                setTimeout(() => {
+                    window.open(site, '_blank', 'noopener,noreferrer');
+                    launcherWindow.focus();
+                    document.getElementById('status').textContent = `Opened ${index + 1} of ${sites.length} websites`;
+                    
+                    if (index === sites.length - 1) {
+                        setTimeout(() => {
+                            document.getElementById('status').textContent = 'All websites opened!';
+                            document.querySelector('.loader').style.display = 'none';
+                            startCountdown(15);
+                        }, 1000);
+                    }
+                }, index * 1000);
+            });
+        }
+
+
+        function startCountdown(seconds) {
+            const timerElement = document.getElementById('timer');
+            timerElement.textContent = `This page will close in ${seconds} seconds`;
+
+
+            const countdownInterval = setInterval(() => {
+                seconds--;
+                timerElement.textContent = `This page will close in ${seconds} seconds`;
+
+
+                if (seconds <= 0) {
+                    clearInterval(countdownInterval);
+                    window.close();
+                }
+            }, 1000);
+        }
+
+
+        window.onload = () => {
+            openWebsites();
+            window.focus();
+        };
+
+
+        // Keep focus on this window
+        setInterval(() => {
+            launcherWindow.focus();
+        }, 100);
+    </script>
+</body>
+</html>
